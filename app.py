@@ -356,12 +356,17 @@ def predict():
         # Get the file from post request
         f = request.files['file']
         file_path = secure_filename(f.filename)
-        f.save(file_path)
-        pred, score = image_processing(file_path)
+        fp = os.path.join("static\inputs", file_path)
+        f.save(fp)
+        # f.save(file_path)
+        pred, score = image_processing(fp)
         if score < 90:
             result = f"Predicted Traffic🚦Sign is: {pred} of {score}% accuracy. Don't get fooled, keep any eye"
         else:
             result = f"Predicted Traffic🚦Sign is: {pred} of {score}% accuracy"
+        time.sleep(5)
+        if os.path.exists(fp):
+            os.remove(fp)
         return result
     return None
 
